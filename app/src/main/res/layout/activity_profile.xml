@@ -18,7 +18,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/sky_blue_color_bg"
+        android:background="@color/bg_color"
         android:fillViewport="true"
         android:paddingBottom="70dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -14,4 +14,5 @@
     <color name="yellowish_color1">#FEE200</color>
     <color name="bluish_color">#1A4A9C</color>
     <color name="sky_blue_color_bg">#4C9CA6</color>
+    <color name="bg_color">#a7a6b4</color>
 </resources>
