@@ -22,10 +22,6 @@
         android:largeHeap="true"
         tools:targetApi="31">
         <activity
-            android:name=".PA"
-            android:exported="true">
-        </activity>
-        <activity
             android:name=".ui.ProfileActivity"
             android:exported="true">
         </activity>
