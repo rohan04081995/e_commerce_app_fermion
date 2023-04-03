@@ -22,10 +22,6 @@ class ProductDetailsActivity : AppCompatActivity(),
     ProductColorsAdapter.ProductColorsAdapterClickListener,
     ProductSizesAdapter.ProductSizesAdapterClickListener {
 
-    companion object {
-        val TAG = "dataCheck"
-    }
-
     private lateinit var product: ProductModel
 
     private lateinit var product_details_iv: ImageView
@@ -79,7 +75,6 @@ class ProductDetailsActivity : AppCompatActivity(),
             )
         )
 
-//        Log.d(TAG, "onCreate: details: $product")
 
         Glide.with(this).load(product.productImage).placeholder(R.drawable.ic_launcher_foreground)
             .into(product_details_iv)
@@ -121,17 +116,12 @@ class ProductDetailsActivity : AppCompatActivity(),
     override fun productColorsAdapterClick(position: Int) {
         product_details_color_tv.text = "Color: ${product.productColorsList[position].colorName}"
         product_details_color_tv.setTextColor(Color.parseColor(product.productColorsList[position].colorCode))
-//        Toast.makeText(
-//            this,
-//            "color changed to ${product.productColorsList[position].colorName}",
-//            Toast.LENGTH_SHORT
-//        ).show()
+
     }
 
     override fun productSizesAdapterClick(position: Int) {
         product_details_size_tv.text = "Size: ${product.sizesList[position]}"
-//        Toast.makeText(this, "size changed to ${product.sizesList[position]}", Toast.LENGTH_SHORT)
-//            .show()
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

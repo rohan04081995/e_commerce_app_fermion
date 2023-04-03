@@ -27,7 +27,6 @@ import com.example.fermiontask.BuildConfig
 import com.example.fermiontask.R
 import com.example.fermiontask.db.UsersDatabase
 import com.example.fermiontask.model.ProfileModel
-import com.example.fermiontask.ui.ProductDetailsActivity.Companion.TAG
 import java.io.File
 import java.lang.reflect.Field
 import java.text.SimpleDateFormat
@@ -119,34 +118,26 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
         if (my_bitmap == null) {
             add_image_ib.visibility = View.VISIBLE
         }
-        Log.d(TAG, "onCreate: get user: ${profileModel_retrieved}: my_bitmap: $my_bitmap")
 
         storagePermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-                Log.d(TAG, "onCreate: galleryPermissionLauncher: $it")
+
                 if (it) {
                     pickImageFromGallery()
                 } else {
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_SHORT).show()
                     var permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         android.Manifest.permission.READ_MEDIA_IMAGES
                     } else {
                         android.Manifest.permission.READ_EXTERNAL_STORAGE
                     }
-                    Log.d(
-                        TAG, "onCreate:galleryPermissionLauncher:rationale ${
-                            shouldShowRequestPermissionRationale(permission)
-                        }"
-                    )
+
                     if (!shouldShowRequestPermissionRationale(permission)) {
-                        Log.d(TAG, "galleryPermissionLauncher: permission denied permanently")
                         showPermissionExplanationDialog("storage permission is needed for get photo from gallery")
                     }
 
                 }
             }
         pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            Log.d(TAG, "onCreate:profile: gallery uri: $uri ")
             if (uri != null) {
                 add_image_ib.visibility = View.GONE
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -168,14 +159,11 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
-            Log.d(
-                TAG,
-                "onCreate:cameraLauncher: ${it} :: photoFile!!.absolutePath: ${photoFile!!.absolutePath} "
-            )
+
             if (it) {
                 add_image_ib.visibility = View.GONE
                 my_bitmap = BitmapFactory.decodeFile(photoFile!!.absolutePath)
-                val scaleFactor = 0.5f // scale down by 50%
+                val scaleFactor = 0.7f // scale down by 50%
                 val matrix = Matrix()
                 matrix.postScale(scaleFactor, scaleFactor)
                 my_bitmap = Bitmap.createBitmap(
@@ -190,12 +178,10 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
         settingsLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
-            Log.d(TAG, "onCreate:settingsLauncher:${it} ")
         }
 
         cameraMultiplePermissionsLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-                Log.d(TAG, "onCreate:cameraMultiplePermissions: ${it}")
 
                 val cameraPermission = it[android.Manifest.permission.CAMERA] ?: false
                 var storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -205,7 +191,7 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
                 }
 
                 if (cameraPermission && storagePermission) {
-                    Log.d(TAG, "onCreate:cameraMultiplePermissions: both permissions granted")
+
                     openCamera()
                 } else {
                     var storagePerm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -213,11 +199,7 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         android.Manifest.permission.READ_EXTERNAL_STORAGE
                     }
-                    Log.d(
-                        TAG, "onCreate:cameraMultiplePermissions:camera: ${
-                            shouldShowRequestPermissionRationale(android.Manifest.permission.CAMERA)
-                        } :: storage: ${shouldShowRequestPermissionRationale(storagePerm)}"
-                    )
+
 
                     var message: String =
                         if (!shouldShowRequestPermissionRationale(android.Manifest.permission.CAMERA) && !shouldShowRequestPermissionRationale(
@@ -260,10 +242,8 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
                 this, storagePermission
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Log.d(TAG, "cameraPermissionCheck: camera permission granted")
             openCamera()
         } else {
-            Log.d(TAG, "cameraPermissionCheck: camera permission not granted")
             cameraMultiplePermissionsLauncher.launch(
                 arrayOf(
                     android.Manifest.permission.CAMERA, storagePermission
@@ -294,24 +274,20 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun openCamera() {
-        Log.d(TAG, "openCamera: ")
+
 //        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
             photoFile = createImageFile()
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                val photoURI = FileProvider.getUriForFile(
-                    this, "${BuildConfig.APPLICATION_ID}.provider", photoFile!!
-                )
+
+            val photoURI = FileProvider.getUriForFile(
+                this, "${BuildConfig.APPLICATION_ID}.provider", photoFile!!
+            )
 //                takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
 //                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                cameraLauncher.launch(photoURI)
+            cameraLauncher.launch(photoURI)
 
-            }
         } catch (ex: Exception) {
-            // Error occurred while creating the File
-            Log.d(TAG, "openCamera: error :${ex.message.toString()}")
             displayMessage(baseContext, ex.message.toString())
         }
     }
@@ -326,7 +302,7 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
             settingsLauncher.launch(intent)
         })
         builder.setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->
-//
+
         })
         val alert = builder.create()
         alert.show()
@@ -393,7 +369,6 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
         alertDialog.setItems(items, DialogInterface.OnClickListener { dialog, which ->
             when (which) {
                 0 -> {
-//                    Toast.makeText(this, "Clicked on Gallery", Toast.LENGTH_LONG).show()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         galleryPermissionCheck(android.Manifest.permission.READ_MEDIA_IMAGES)
                     } else {
@@ -401,7 +376,6 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
                 1 -> {
-//                    Toast.makeText(this, "Clicked on Camera", Toast.LENGTH_LONG).show()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         cameraPermissionCheck(android.Manifest.permission.READ_MEDIA_IMAGES)
                     } else {
@@ -412,7 +386,6 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
 
         })
         val alert: AlertDialog = alertDialog.create()
-//        alert.setCanceledOnTouchOutside(false)
         alert.show()
     }
 
@@ -431,30 +404,23 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
                     deliveryAddress = user_address_et.text.toString(),
                     bitmap = my_bitmap
                 )
-                Log.d(
-                    TAG, "onClick: submit_user_details_button:profileModel to add: $profileModel"
-                )
+
                 val handlerThread = HandlerThread("DatabaseHandlerThread").apply { start() }
                 val databaseHandler = Handler(handlerThread.looper)
 
-                var message: String? = null
-
                 databaseHandler.post {
-                    message = if (profileModel_retrieved != null) {
+                    val message = if (profileModel_retrieved != null) {
                         userDatabase.updateUser(profileModel)
-                        "profile saved"
+                        "profile updated"
                     } else {
                         userDatabase.addUser(profileModel)
-                        "profile updated"
+                        "profile saved"
                     }
                     Toast.makeText(this@ProfileActivity, message, Toast.LENGTH_SHORT).show()
                 }
                 Toast.makeText(
-                    this@ProfileActivity, "profile update is in progress", Toast.LENGTH_SHORT
+                    this@ProfileActivity, "updating profile", Toast.LENGTH_SHORT
                 ).show()
-//                val retrievedUser = userDatabase.getUser()
-//                Log.d(TAG, "onClick:submit_user_details_button retrieved user: $retrievedUser")
-
 
                 onBackPressedDispatcher.onBackPressed()
             }

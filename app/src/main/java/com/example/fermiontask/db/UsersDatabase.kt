@@ -9,7 +9,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import com.example.fermiontask.model.ProfileModel
-import com.example.fermiontask.ui.ProductDetailsActivity.Companion.TAG
 import java.io.ByteArrayOutputStream
 
 class UsersDatabase(
@@ -17,6 +16,7 @@ class UsersDatabase(
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
+        val TAG = "dataCheck"
         private val DATABASE_NAME = "profile_database"
         private val DATABASE_VERSION = 1
 
@@ -40,7 +40,7 @@ class UsersDatabase(
 
     }
 
-    fun addUser(user: ProfileModel): ProfileModel {
+  fun addUser(user: ProfileModel): ProfileModel {
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(PHONE_COl, user.phoneNumber)
@@ -94,7 +94,7 @@ class UsersDatabase(
 
     fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray {
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream)
         return stream.toByteArray()
     }
 
