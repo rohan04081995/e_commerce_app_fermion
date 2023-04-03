@@ -73,7 +73,7 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
         try {
             val field: Field = CursorWindow::class.java.getDeclaredField("sCursorWindowSize")
             field.isAccessible = true
-            field.set(null, 100 * 1024 * 1024) //the 100MB is the new size
+            field.set(null, 100 * 1024 * 1024)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -149,7 +149,7 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
                     my_bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                     user_profile_iv.setImageBitmap(my_bitmap)
                 }
-                val scaleFactor = 0.5f // scale down by 50%
+                val scaleFactor = 0.7f
                 val matrix = Matrix()
                 matrix.postScale(scaleFactor, scaleFactor)
                 my_bitmap = Bitmap.createBitmap(
@@ -163,7 +163,7 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
             if (it) {
                 add_image_ib.visibility = View.GONE
                 my_bitmap = BitmapFactory.decodeFile(photoFile!!.absolutePath)
-                val scaleFactor = 0.7f // scale down by 50%
+                val scaleFactor = 0.7f
                 val matrix = Matrix()
                 matrix.postScale(scaleFactor, scaleFactor)
                 my_bitmap = Bitmap.createBitmap(

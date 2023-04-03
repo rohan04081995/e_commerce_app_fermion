@@ -16,7 +16,6 @@ class UsersDatabase(
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        val TAG = "dataCheck"
         private val DATABASE_NAME = "profile_database"
         private val DATABASE_VERSION = 1
 
@@ -40,32 +39,26 @@ class UsersDatabase(
 
     }
 
-  fun addUser(user: ProfileModel): ProfileModel {
+    fun addUser(user: ProfileModel) {
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(PHONE_COl, user.phoneNumber)
         values.put(EMAIL_COl, user.emailAddress)
         values.put(ADDRESS_COl, user.deliveryAddress)
         values.put(IMAGE_COL, convertBitmapToByteArray(user.bitmap!!))
-        val insertId = db.insert(TABLE_NAME, null, values)
-        Log.d(TAG, "addUser: insert id: ${insertId}")
+        db.insert(TABLE_NAME, null, values)
         db.close()
-
-        return user
     }
 
-    fun updateUser(user: ProfileModel): ProfileModel {
-
+    fun updateUser(user: ProfileModel) {
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(PHONE_COl, user.phoneNumber)
         values.put(EMAIL_COl, user.emailAddress)
         values.put(ADDRESS_COl, user.deliveryAddress)
         values.put(IMAGE_COL, convertBitmapToByteArray(user.bitmap!!))
-
-        val updatedId = db.update(TABLE_NAME, values, "$ID_COL=?", arrayOf("1"))
-        Log.d(TAG, "updateUser: updated id: $updatedId")
-        return user
+        db.update(TABLE_NAME, values, "$ID_COL=?", arrayOf("1"))
+        db.close()
     }
 
     @SuppressLint("Range")
